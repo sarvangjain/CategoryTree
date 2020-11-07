@@ -31,7 +31,8 @@ const getNodeLabel = (node) => last(node.path.split('/'));
 
 const TreeNode = (props) => {
   const { node, getChildNodes, level, onToggle, onNodeSelect } = props;
-  const [child, setChild] = React.useState([]);
+  const [child, setChild] = React.useState({});
+  const [childPath, setChildPath] = React.useState([]);
 
   const Node = async (node) => {
     console.log(node._id);
@@ -46,14 +47,32 @@ const TreeNode = (props) => {
         status: 1,
         searchid: node._id
       })
-    }).then(res => res.json())
+    }).then(res => res.json()  
         .then((result) => {
           console.log(result, level)
-          const children = result.data.map(r => ({...r, isOpen: false, path:node.path+"/"+r.title}))
-          onToggle(node, children)
-        })
-        .catch( e => e)
-  }
+          let childObj = new Object()
+          let i = ''
+          let childPath = []
+
+          result.data.forEach(e => {
+            childPath.push(node.path+"/"+e.title)
+            i = node.path+"/"+e.title
+            childObj[i] = {
+              ...e,
+              isOpen: false,
+              path: node.path+"/"+e.title,
+              isRoot: true,
+              children: []
+            }
+          console.log(childObj)
+          })
+
+        setChild(childObj)
+        setChildPath(childPath)
+        onToggle(node,childPath, childObj)
+
+  }))
+}
 
   React.useEffect(() => console.log(child))
 

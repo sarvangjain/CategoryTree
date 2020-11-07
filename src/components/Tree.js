@@ -46,7 +46,7 @@ const data = {
 export default class Tree extends Component {
 
   state = {
-    nodes: new Map(),
+    nodes: new Object(),
     isLoaded: false,
     items: []
   };
@@ -64,19 +64,23 @@ export default class Tree extends Component {
       })
     }).then(res => res.json())
         .then((result) => {
-          let map = new Map()
+          let obj = new Object()
+          let i = ''
           result.data.forEach(e => {
-            map.set(e.title, {
+            i = '/'+e.title
+            obj[i] = {
               ...e,
               isOpen: false,
-              path: e.title,
+              path: '/' + e.title,
               isRoot: true,
-            })
-            this.setState(() => {nodes: map})
+              children: []
+            }
+            i+=1
+            this.setState(() => {nodes: obj})
           });
           this.setState({
             isLoaded: true,
-            nodes: map
+            nodes: obj
           })
         })
         .catch( e => console.log(e))
@@ -97,14 +101,27 @@ export default class Tree extends Component {
 
   getChildNodes = (node) => {
     const { nodes } = this.state;
+    console.log(node, node.children)
     if (!node.children) return [];
+    if (node.children.length === 0) return [];
     return node.children.map(path => nodes[path]);
   }
 
-  onToggle = (node, children) => {
+  onToggle = (node, children, child) => {
+    console.log(children)
     const { nodes } = this.state;
     nodes[node.path].isOpen = !node.isOpen;
-    this.setState({ nodes });
+    let newNode = {}
+    if (nodes[node.path].children.length === 0) {
+      newNode = {...nodes, ...child}
+      nodes[node.path].children = children
+    }
+    else {
+      newNode = nodes
+    }
+    console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',newNode)
+    this.setState({ nodes: newNode });
+    
   }
 
   onNodeSelect = node => {
