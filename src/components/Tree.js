@@ -4,49 +4,10 @@ import PropTypes from 'prop-types';
 
 import TreeNode from './TreeNode';
 
-const data = {
-  '/root': {
-    path: '/root',
-    type: 'folder',
-    isRoot: true,
-    children: ['/root/david', '/root/jslancer'],
-  },
-  '/root/david': {
-    path: '/root/david',
-    type: 'folder',
-    children: ['/root/david/readme.md'],
-  },
-  '/root/david/readme.md': {
-    path: '/root/david/readme.md',
-    type: 'file',
-    content: 'Thanks for reading me me. But there is nothing here.'
-  },
-  '/root/jslancer': {
-    path: '/root/jslancer',
-    type: 'folder',
-    children: ['/root/jslancer/projects', '/root/jslancer/vblogs'],
-  },
-  '/root/jslancer/projects': {
-    path: '/root/jslancer/projects',
-    type: 'folder',
-    children: ['/root/jslancer/projects/treeview'],
-  },
-  '/root/jslancer/projects/treeview': {
-    path: '/root/jslancer/projects/treeview',
-    type: 'folder',
-    children: [],
-  },
-  '/root/jslancer/vblogs': {
-    path: '/root/jslancer/vblogs',
-    type: 'folder',
-    children: [],
-  },
-};
-
 export default class Tree extends Component {
 
   state = {
-    nodes: new Object(),
+    nodes: {},
     isLoaded: false,
     items: []
   };
@@ -64,7 +25,7 @@ export default class Tree extends Component {
       })
     }).then(res => res.json())
         .then((result) => {
-          let obj = new Object()
+          let obj = {}
           let i = ''
           result.data.forEach(e => {
             i = '/'+e.title
@@ -76,7 +37,6 @@ export default class Tree extends Component {
               children: []
             }
             i+=1
-            this.setState(() => {nodes: obj})
           });
           this.setState({
             isLoaded: true,
@@ -94,7 +54,6 @@ export default class Tree extends Component {
     const { nodes } = this.state;
     console.log(nodes)
     return values(nodes).filter(node => {
-      console.log(node)
       return node.isRoot === true
     });
   }

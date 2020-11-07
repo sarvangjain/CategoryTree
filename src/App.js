@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import FileExplorer from './components/FileExplorer';
-import {Example} from './TreeView';
 
 
 class App extends Component {

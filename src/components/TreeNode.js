@@ -1,7 +1,6 @@
 import React from 'react';
 import { FaFile, FaFolder, FaFolderOpen, FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import styled from 'styled-components';
-import last from 'lodash/last';
 import PropTypes from 'prop-types';
 
 const getPaddingLeft = (level, type) => {
@@ -27,12 +26,10 @@ const NodeIcon = styled.div`
   margin-right: ${props => props.marginRight ? props.marginRight : 5}px;
 `;
 
-const getNodeLabel = (node) => last(node.path.split('/'));
 
 const TreeNode = (props) => {
   const { node, getChildNodes, level, onToggle, onNodeSelect } = props;
   const [child, setChild] = React.useState({});
-  const [childPath, setChildPath] = React.useState([]);
 
   const Node = async (node) => {
     console.log(node._id);
@@ -50,7 +47,7 @@ const TreeNode = (props) => {
     }).then(res => res.json()  
         .then((result) => {
           console.log(result, level)
-          let childObj = new Object()
+          let childObj = {}
           let i = ''
           let childPath = []
 
@@ -61,14 +58,12 @@ const TreeNode = (props) => {
               ...e,
               isOpen: false,
               path: node.path+"/"+e.title,
-              isRoot: true,
               children: []
             }
           console.log(childObj)
           })
 
         setChild(childObj)
-        setChildPath(childPath)
         onToggle(node,childPath, childObj)
 
   }))

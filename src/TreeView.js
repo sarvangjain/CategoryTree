@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import SuperTreeview from 'react-super-treeview';
 
 export class Example extends React.Component {
